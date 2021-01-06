@@ -134,6 +134,7 @@ class TikzDirective(Directive):
     final_argument_whitespace = True
     option_spec = {'libs': directives.unchanged,
                    'stringsubst': directives.flag,
+                   'notikzpicture': directives.flag,
                    'xscale': directives.unchanged,
                    'include': directives.unchanged}
 
@@ -171,6 +172,10 @@ class TikzDirective(Directive):
             node['stringsubst'] = True
         else:
             node['stringsubst'] = False
+        if 'notikzpicture' in self.options:
+            node['notikzpicture'] = True
+        else:
+            node['notikzpicture'] = False
         if node['tikz'] == '':
             return [self.state_machine.reporter.warning(
                     'Ignoring "tikz" directive without content.',
@@ -210,7 +215,7 @@ def cleanup_tikzcode(self, node):
     tikz = tikz.replace('\r\n', '\n')
     tikz = re.sub('^\s*%.*$\n', '', tikz, 0, re.MULTILINE)
     tikz = re.sub('^\s*$\n', '', tikz, 0, re.MULTILINE)
-    if not tikz.startswith('\\begin{tikzpicture}'):
+    if not tikz.startswith('\\begin{tikzpicture}') and not node["notikzpicture"]:
         tikz = '\\begin{tikzpicture}\n' + tikz + '\n\\end{tikzpicture}'
     if 'stringsubst' in node:
         tikz = Template(tikz).safe_substitute(wd=getcwd().replace('\\', '/'))

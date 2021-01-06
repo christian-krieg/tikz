@@ -197,6 +197,7 @@ The **tikz-directive** can be used in two ways::
      across lines›
      :libs:   ‹tikz libraries›
      :xscale: ‹integer value between 0 and 100›
+     :notikzpicture:
      :stringsubst:
 
 or::
@@ -205,6 +206,7 @@ or::
      across lines›
      :libs:   ‹tikz libraries›
      :xscale: ‹integer value between 0 and 100›
+     :notikzpicture:
      :stringsubst:
 
      ‹tikz code, potentially broken
@@ -223,6 +225,8 @@ For the ``latex`` target, this is ``\columnwidth``, and for the ``html`` target,
 the percentage is added to the generated ``<\img>`` as a ``width`` attribute.
 The aspect ratio of the image is preserved.
 
+The ``:notikzpicture:``
+
 
 ``tikz_tikzlibraries`` in ``conf.py``.
 
@@ -233,7 +237,11 @@ referring to some source file in the LaTeX code.
 
 The ``‹tikz code›`` is code according to the Ti\ *k*\ Z LaTeX package.  It
 behaves as if inside a ``tikzpicture`` environment.  The presence of
-``\begin{tikzpicture}`` and ``\end{tikzpicture}`` is optional.
+``\begin{tikzpicture}`` and ``\end{tikzpicture}`` is optional, unless
+``:notikzpicture:`` is set. ``:notikzpicture:`` is intended to switch-off
+auto-inserting a ``tikzpicture`` environment if this causes problems (e.g., 
+with the ``tikztimingtable`` environment which in fact is a ``tikzpicture``
+environment).
 
 Alternatively to providing the ``‹tikz code›``, the ``:include:`` option can be
 used to import the code from a file::
