@@ -199,6 +199,8 @@ The **tikz-directive** can be used in two ways::
      :xscale: ‹integer value between 0 and 100›
      :notikzpicture:
      :stringsubst:
+     :align: <left|center|right>
+     :alt: <alternative text>
 
 or::
 
@@ -208,6 +210,8 @@ or::
      :xscale: ‹integer value between 0 and 100›
      :notikzpicture:
      :stringsubst:
+     :align: <left|center|right>
+     :alt: <alternative text>
 
      ‹tikz code, potentially broken
      across lines›
@@ -234,6 +238,10 @@ The ``:stringsubst:`` option enables the following string substitution in the
 ``‹tikz code›``:  Before processing the ``‹tikz code›`` the string ``$wd`` or
 ``$(wd)`` is replaced by the project root directory.  This is convenient when
 referring to some source file in the LaTeX code.
+
+The ``:align:`` option expects "left", "center", or "right" to specify the horizontal alignment of the image, equivalent to the HTML "text-align" CSS property. The default value is "center".
+
+The ``:alt:`` option specifies the alternative text, which is a short description of the image, displayed by applications that cannot display images, or spoken by applications for visually impaired users. The default value is "This is a figure."
 
 The ``‹tikz code›`` is code according to the Ti\ *k*\ Z LaTeX package.  It
 behaves as if inside a ``tikzpicture`` environment.  The presence of

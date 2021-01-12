@@ -133,6 +133,8 @@ class TikzDirective(Directive):
     optional_arguments = 1
     final_argument_whitespace = True
     option_spec = {'libs': directives.unchanged,
+                   'alt': directives.unchanged,
+                   'align': directives.unchanged,
                    'stringsubst': directives.flag,
                    'notikzpicture': directives.flag,
                    'xscale': directives.unchanged,
@@ -168,6 +170,8 @@ class TikzDirective(Directive):
 
         node['libs'] = self.options.get('libs', '')
         node['xscale'] = self.options.get('xscale', '')
+        node['alt'] = self.options.get('alt', 'This is a figure.')
+        node['align'] = self.options.get('align', 'center')
         if 'stringsubst' in self.options:
             node['stringsubst'] = True
         else:
@@ -310,7 +314,7 @@ def html_visit_tikzinline(self, node):
         sm.walkabout(self)
     else:
         self.body.append('<img src="%s" alt="%s"/>' %
-                         (fname, self.encode(node['tikz']).strip()))
+                         (fname, self.encode(node['alt']).strip()))
     raise nodes.SkipNode
 
 
@@ -329,10 +333,10 @@ def html_visit_tikz(self, node):
         scale = ''
         if node['xscale']:
             scale = 'width="%s%%"' % (node['xscale'])
-        self.body.append(self.starttag(node, 'div', CLASS='figure'))
+        self.body.append(self.starttag(node, 'div', CLASS='figure', STYLE='text-align: %s' % self.encode(node['align']).strip()))
         self.body.append('<p>')
         self.body.append('<img %s src="%s" alt="%s" /></p>\n' %
-                          (scale, fname, self.encode(node['tikz']).strip()))
+                          (scale, fname, self.encode(node['alt']).strip()))
 
 
 def html_depart_tikz(self, node):
@@ -378,14 +382,13 @@ def latex_visit_tikz(self, node):
     else:
         self.body.append('\\begin{center}' + tikz + '\\end{center}')
 
+
 def latex_depart_tikz(self, node):
     # If we have a caption, we need to add a label for any cross-referencing
     # and then close the figure environment.
     if any(isinstance(child, nodes.caption) for child in node.children):
         self.body.append(self.hypertarget_to(node))
-        self.body.append(
-            '\\end{figure}'
-        )
+        self.body.append('\\end{figure}')
 
 
 def depart_tikzinline(self, node):
